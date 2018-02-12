@@ -4,12 +4,12 @@ const Hapi = require('hapi');
 // const mongojs = require('mongojs');
 const config = require('config');
 
-const port = process.env.port || 1337;
+const port = process.env.port || 8080;
 
 // Create a server with a host and port
 const server = new Hapi.Server();
 server.connection({
-    host: 'localhost', 
+    // host: 'localhost', 
     port: port,
     routes: {cors:true}
 });
