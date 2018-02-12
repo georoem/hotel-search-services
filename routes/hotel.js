@@ -11,7 +11,7 @@ exports.register = function (server, options, next) {
 
     server.route({
         method: 'GET',
-        path: '/test',
+        path: '/',
         handler: function (request, reply) {
             reply('Success!');
         }
