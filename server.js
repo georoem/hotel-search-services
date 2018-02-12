@@ -2,6 +2,19 @@
 process.env.NODE_ENV = "production";
 const Hapi = require('hapi');
 const config = require('config');
+var firebase = require("firebase");
+
+var configCredentials = {
+    apiKey: "AIzaSyAunNnIL6Ni1g-oaMhfPZiuWymgmQfpL7c",
+    authDomain: "hotel-search-db.firebaseapp.com",
+    databaseURL: "https://hotel-search-db.firebaseio.com",
+    projectId: "hotel-search-db",
+    storageBucket: "hotel-search-db.appspot.com",
+    messagingSenderId: "169652855813"
+  };
+
+firebase.initializeApp(configCredentials);
+
 
 const port = process.env.port || 5000;
 const host = process.env.host || '0.0.0.0';
@@ -13,6 +26,8 @@ server.connection({
     port: port,
     routes: {cors:true}
 });
+
+server.app.db=firebase.database();
 
 server.register([
     require('./routes/hotel'),

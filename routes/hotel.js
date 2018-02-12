@@ -11,19 +11,21 @@ exports.register = function (server, options, next) {
 
     server.route({
         method: 'GET',
-        path: '/',
+        path: '/hotel',
         handler: function (request, reply) {
-            reply('Success!');
+            db.ref('/hotel').once('value').then(function(snapshot) {
+                reply(snapshot);
+            });
         }
     });
 
-    server.route({
-        method: 'GET',
-        path: '/hotel',
-        handler: function (request, reply) {
-            reply(hotels);
-        }
-    });
+    // server.route({
+    //     method: 'GET',
+    //     path: '/hotel',
+    //     handler: function (request, reply) {
+    //         reply(hotels);
+    //     }
+    // });
 
     server.route({
         method: 'GET',
