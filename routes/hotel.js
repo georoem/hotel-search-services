@@ -11,6 +11,14 @@ exports.register = function (server, options, next) {
 
     server.route({
         method: 'GET',
+        path: '/test',
+        handler: function (request, reply) {
+            reply('Success!');
+        }
+    });
+
+    server.route({
+        method: 'GET',
         path: '/hotel',
         handler: function (request, reply) {
             reply(hotels);
@@ -22,20 +30,20 @@ exports.register = function (server, options, next) {
         path: '/hotel/{id}',
         handler: function (request, reply) {
 
-            db.hotel.findOne({
-                _id: request.params.id
-            }, (err, doc) => {
+            // db.hotel.findOne({
+            //     _id: request.params.id
+            // }, (err, doc) => {
 
-                if (err) {
-                    return reply(Boom.wrap(err, 'Internal MongoDB error'));
-                }
+            //     if (err) {
+            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
+            //     }
 
-                if (!doc) {
-                    return reply(Boom.notFound());
-                }
+            //     if (!doc) {
+            //         return reply(Boom.notFound());
+            //     }
 
-                reply(doc);
-            });
+            //     reply(doc);
+            // });
 
         }
     });
@@ -73,14 +81,14 @@ exports.register = function (server, options, next) {
             //Create an id
             hotel._id = uuid.v1();
 
-            db.hotel.save(hotel, (err, result) => {
+            // db.hotel.save(hotel, (err, result) => {
 
-                if (err) {
-                    return reply(Boom.wrap(err, 'Internal MongoDB error'));
-                }
+            //     if (err) {
+            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
+            //     }
 
-                reply(hotel);
-            });
+            //     reply(hotel);
+            // });
         },
         config: {
             validate: {
@@ -101,22 +109,22 @@ exports.register = function (server, options, next) {
         path: '/hotel/{id}',
         handler: function (request, reply) {
 
-            db.hotel.update({
-                _id: request.params.id
-            }, {
-                $set: request.payload
-            }, function (err, result) {
+            // db.hotel.update({
+            //     _id: request.params.id
+            // }, {
+            //     $set: request.payload
+            // }, function (err, result) {
 
-                if (err) {
-                    return reply(Boom.wrap(err, 'Internal MongoDB error'));
-                }
+            //     if (err) {
+            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
+            //     }
 
-                if (result.n === 0) {
-                    return reply(Boom.notFound());
-                }
+            //     if (result.n === 0) {
+            //         return reply(Boom.notFound());
+            //     }
 
-                reply().code(204);
-            });
+            //     reply().code(204);
+            // });
         },
         config: {
             validate: {
@@ -138,20 +146,20 @@ exports.register = function (server, options, next) {
         path: '/hotel/{id}',
         handler: function (request, reply) {
 
-            db.hotel.remove({
-                _id: request.params.id
-            }, function (err, result) {
+            // db.hotel.remove({
+            //     _id: request.params.id
+            // }, function (err, result) {
 
-                if (err) {
-                    return reply(Boom.wrap(err, 'Internal MongoDB error'));
-                }
+            //     if (err) {
+            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
+            //     }
 
-                if (result.n === 0) {
-                    return reply(Boom.notFound());
-                }
+            //     if (result.n === 0) {
+            //         return reply(Boom.notFound());
+            //     }
 
-                reply().code(204);
-            });
+            //     reply().code(204);
+            // });
         }
     });
 
