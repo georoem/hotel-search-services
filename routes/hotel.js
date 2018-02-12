@@ -13,17 +13,7 @@ exports.register = function (server, options, next) {
         method: 'GET',
         path: '/hotel',
         handler: function (request, reply) {
-
             reply(hotels);
-            // db.hotel.find((err, docs) => {
-
-            //     if (err) {
-            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
-            //     }
-
-            //     reply(docs);
-            // });
-
         }
     });
 
@@ -70,21 +60,6 @@ exports.register = function (server, options, next) {
                     }
             });
             reply(filteredHotels);
-            // db.score.find({
-            //     _type: request.params.type
-            // }, (err, doc) => {
-
-            //     if (err) {
-            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
-            //     }
-
-            //     if (!doc) {
-            //         return reply(Boom.notFound());
-            //     }
-
-            //     reply(doc);
-            // });
-
         }
     });
 
