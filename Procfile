@@ -1,1 +1,1 @@
-worker: node server.js -p $PORT
+worker: node server.js -p 5000
