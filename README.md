@@ -29,5 +29,5 @@ Url base `http://localhost:5000/`
 `DELETE /hotel` Elimina un hotel por id
 
 
-## Endporint demo en Heroku
+## Endporint demo en Heroku y Firebase
 [Endpoint Demo](https://infinite-retreat-72098.herokuapp.com/)
