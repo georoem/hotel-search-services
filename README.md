@@ -7,6 +7,7 @@ API Rest para las operaciones CRUD de hoteles, creado con las librerías [HapiJs
 Para correr el proyecto ejecutar:
 
 `npm install`
+
 `node server.js`
 
 (Se requiere la instalacion de Nodejs y Npm)
