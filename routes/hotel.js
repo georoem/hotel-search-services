@@ -1,9 +1,9 @@
-// 'use strict';
+'use strict';
 
 const Boom = require('boom');
 const uuid = require('node-uuid');
 const Joi = require('joi');
-var hotels = require('./data.json'); 
+const firebaseKey = require("firebase-key");
 
 exports.register = function (server, options, next) {
 
@@ -14,39 +14,19 @@ exports.register = function (server, options, next) {
         path: '/hotel',
         handler: function (request, reply) {
             db.ref('/hotel').once('value').then(function(snapshot) {
-                reply(snapshot);
+                reply(snapshotToArray(snapshot));
             });
         }
     });
-
-    // server.route({
-    //     method: 'GET',
-    //     path: '/hotel',
-    //     handler: function (request, reply) {
-    //         reply(hotels);
-    //     }
-    // });
 
     server.route({
         method: 'GET',
         path: '/hotel/{id}',
         handler: function (request, reply) {
-
-            // db.hotel.findOne({
-            //     _id: request.params.id
-            // }, (err, doc) => {
-
-            //     if (err) {
-            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
-            //     }
-
-            //     if (!doc) {
-            //         return reply(Boom.notFound());
-            //     }
-
-            //     reply(doc);
-            // });
-
+            const id = request.params.id;
+            db.ref('/hotel/'+id).once('value').then(function(snapshot) {
+                reply(snapshot.val());
+            });
         }
     });
 
@@ -59,17 +39,19 @@ exports.register = function (server, options, next) {
             var filteredHotels=[];
             var name = params.name ? params.name : '';
             var stars = params.stars ? params.stars : [1,2,3,4,5];
-            filteredHotels = hotels.filter(
-                hotel => {
-                    if(name.length==0) {
-                        return (stars == hotel.stars || stars.indexOf(hotel.stars)>-1);
-                    }
-                    else {
-                        return hotel.name.toLowerCase().indexOf(name.toLowerCase())>-1 &&
-                        (stars == hotel.stars || stars.indexOf(hotel.stars)>-1);
-                    }
+            var ref = db.ref('/hotel').once('value').then(function(snapshot) {
+                filteredHotels = snapshotToArray(snapshot).filter(
+                    hotel => {
+                        if(name.length==0) {
+                            return (stars == hotel.stars || stars.indexOf(hotel.stars)>-1);
+                        }
+                        else {
+                            return hotel.name.toLowerCase().indexOf(name.toLowerCase())>-1 &&
+                            (stars == hotel.stars || stars.indexOf(hotel.stars)>-1);
+                        }
+                });
+                reply(filteredHotels);
             });
-            reply(filteredHotels);
         }
     });
 
@@ -79,30 +61,24 @@ exports.register = function (server, options, next) {
         handler: function (request, reply) {
 
             const hotel = request.payload;
+            const result = db.ref('/hotel').push(hotel);
+            reply(result);
+        }
+    });
 
-            //Create an id
-            hotel._id = uuid.v1();
+    server.route({
+        method: 'POST',
+        path: '/hotel/all',
+        handler: function (request, reply) {
 
-            // db.hotel.save(hotel, (err, result) => {
+            const hotels = request.payload;
 
-            //     if (err) {
-            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
-            //     }
+            hotels.forEach(hotel => {
+                db.ref('/hotel').push(hotel);
+            });
 
-            //     reply(hotel);
-            // });
-        },
-        config: {
-            validate: {
-                payload: {
-                    _type: Joi.string().min(1).max(50).required(),
-                    _typeTitle: Joi.string().min(1).max(100).required() , 
-                    _description: Joi.string().min(1).max(100).required(),
-                    _color: Joi.string().min(1).max(10).required(),
-                    _icon: Joi.string().min(1).max(50).required(), 
-                    _wordsTypehotel: Joi.array().min(1).required()
-                }
-            }
+            reply(hotels);
+            
         }
     });
 
@@ -110,36 +86,10 @@ exports.register = function (server, options, next) {
         method: 'PATCH',
         path: '/hotel/{id}',
         handler: function (request, reply) {
-
-            // db.hotel.update({
-            //     _id: request.params.id
-            // }, {
-            //     $set: request.payload
-            // }, function (err, result) {
-
-            //     if (err) {
-            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
-            //     }
-
-            //     if (result.n === 0) {
-            //         return reply(Boom.notFound());
-            //     }
-
-            //     reply().code(204);
-            // });
-        },
-        config: {
-            validate: {
-                payload: Joi.object({
-                    payload: {
-                        _type: Joi.string().min(1).max(50).optional(),
-                        _typeTitle: Joi.string().min(1).max(100).optional() , 
-                        _description: Joi.string().min(1).max(100).optional(),
-                        _color: Joi.string().min(1).max(10).optional(),
-                        _icon: Joi.string().min(1).max(50).optional(), 
-                    }
-                }).required().min(1)
-            }
+            const id = request.params.id;
+            const hotel = request.payload;
+            const result = db.ref('/hotel/'+id).set(hotel);
+            reply(result);
         }
     });
 
@@ -147,25 +97,26 @@ exports.register = function (server, options, next) {
         method: 'DELETE',
         path: '/hotel/{id}',
         handler: function (request, reply) {
-
-            // db.hotel.remove({
-            //     _id: request.params.id
-            // }, function (err, result) {
-
-            //     if (err) {
-            //         return reply(Boom.wrap(err, 'Internal MongoDB error'));
-            //     }
-
-            //     if (result.n === 0) {
-            //         return reply(Boom.notFound());
-            //     }
-
-            //     reply().code(204);
-            // });
+            const id = request.params.id;
+            const result = db.ref('/hotel/'+id).remove(); 
+            reply(result);
         }
     });
 
     return next();
+};
+
+function snapshotToArray(snapshot) {
+    var returnArr = [];
+
+    snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val();
+        item.key = childSnapshot.key;
+
+        returnArr.push(item);
+    });
+
+    return returnArr;
 };
 
 exports.register.attributes = {
