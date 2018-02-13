@@ -3,6 +3,7 @@ process.env.NODE_ENV = "production";
 const Hapi = require('hapi');
 const config = require('config');
 var firebase = require("firebase");
+var async = require("async");
 
 var configCredentials = {
     apiKey: "AIzaSyAunNnIL6Ni1g-oaMhfPZiuWymgmQfpL7c",
@@ -13,9 +14,6 @@ var configCredentials = {
     messagingSenderId: "169652855813"
   };
 
-firebase.initializeApp(configCredentials);
-
-
 const port = process.env.PORT || 5000;
 
 // Create a server with a host and port
@@ -25,6 +23,8 @@ server.connection({
     port: port,
     routes: {cors:true}
 });
+
+firebase.initializeApp(configCredentials);
 
 server.app.db=firebase.database();
 
