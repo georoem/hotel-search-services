@@ -1,4 +1,4 @@
-# Hotel Search Web
+# Hotel Search Services
 
 API Rest para las operaciones CRUD de hoteles, creado con las librerías [HapiJs](https://hapijs.com/) y Nodess [NodeJs](https://nodejs.org/es/)
 
