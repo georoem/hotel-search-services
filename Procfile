@@ -1,1 +1,1 @@
-worker: node server.js -p 5000
+web: bundle exec thin start -p $PORT
