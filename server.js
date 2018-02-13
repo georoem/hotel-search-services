@@ -16,13 +16,12 @@ var configCredentials = {
 firebase.initializeApp(configCredentials);
 
 
-const port = process.argv[2] || 5000;
-const host = process.argv[3] || 'localhost';
+const port = process.env.PORT || 5000;
 
 // Create a server with a host and port
 const server = new Hapi.Server();
 server.connection({
-    host: host, 
+    host: 'localhost', 
     port: port,
     routes: {cors:true}
 });
