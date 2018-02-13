@@ -16,8 +16,8 @@ var configCredentials = {
 firebase.initializeApp(configCredentials);
 
 
-const port = process.env.port || 5000;
-const host = process.env.host || 'localhost';
+const port = process.argv[2] || 5000;
+const host = process.argv[3] || 'localhost';
 
 // Create a server with a host and port
 const server = new Hapi.Server();

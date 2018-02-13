@@ -3,7 +3,6 @@
 const Boom = require('boom');
 const uuid = require('node-uuid');
 const Joi = require('joi');
-const firebaseKey = require("firebase-key");
 
 exports.register = function (server, options, next) {
 
