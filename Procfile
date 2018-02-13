@@ -1,1 +1,1 @@
-web: exec thin start -p $PORT
+web: start -p $PORT
