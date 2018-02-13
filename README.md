@@ -17,11 +17,17 @@ Url base `http://localhost:5000/`
 ## Operaciónes Soportadas
 
 `GET /hotel` Obtiene todos los hoteles
+
 `GET /hotel/filter` Obtiene todos los hoteles filtrados por nombre y estrellas
+
 `POST /hotel` Guarda un hotel
+
 `POST /hotel/all` Guarda una lista de hoteles
+
 `PATCH /hotel` Actualiza un hotel por id
+
 `DELETE /hotel` Elimina un hotel por id
+
 
 ## Endporint demo en Heroku
 [Endpoint Demo](https://infinite-retreat-72098.herokuapp.com/)
